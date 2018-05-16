@@ -18,14 +18,24 @@ public class PlayerController : MonoBehaviour {
 	public static void DoTurn(bool isLeft){
 		isFallingDown = false;
 		if(isLeft){
-			dx = -4.0f;
+			dx = -3.75f;
 		} else{
-			dx = 4.0f;
+			dx = 3.75f;
 		}
 	}
 
 	public static void DoDown(){
 		isFallingDown = true;
 		dx = 0.0f;
+	}
+
+	void OnTriggerEnter2D(Collider2D other){
+		if(other.tag.Equals("Floor")){
+			Debug.Log("Hit floor!");
+		}
+		else if(other.tag.Equals("Star")){
+			Debug.Log("Hit star!");
+			Destroy(other.gameObject);
+		}
 	}
 }

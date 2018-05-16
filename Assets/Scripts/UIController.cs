@@ -7,6 +7,7 @@ public class UIController : MonoBehaviour {
 	private SpriteRenderer airplaneRenderer;
 	enum E_Direction {DIR_LEFT = 0, DIR_DOWN = 1, DIR_RIGHT = 2};
 	private Sprite[] airplaneSprites;
+	public static bool IsGameRunning = false;
 
 	// Use this for initialization
 	void Start () {
@@ -25,6 +26,8 @@ public class UIController : MonoBehaviour {
 		airplaneSprites[(int) E_Direction.DIR_LEFT] = Resources.Load<Sprite>("Sprites/plane_left");
 		airplaneSprites[(int) E_Direction.DIR_DOWN] = Resources.Load<Sprite>("Sprites/plane_down");
 		airplaneSprites[(int) E_Direction.DIR_RIGHT] = Resources.Load<Sprite>("Sprites/plane_right");
+
+		IsGameRunning = false;
 	}
 	
 	// Update is called once per frame
@@ -47,6 +50,9 @@ public class UIController : MonoBehaviour {
 		// Show the airplane
 		airplaneRenderer.gameObject.SetActive(true);
 		TurnRight();
+
+		// Other initializations
+		IsGameRunning = true;
 	}
 
 	void TurnLeft(){
