@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour {
 	public static float DIFF_INCREASE_PER_SECOND = 0.01f;
 	public static int starsCollected = 0;
 	public static float FALL_DOWN_SPEEDUP = 2.5f;
-	private static float moved = 0.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -25,7 +24,6 @@ public class PlayerController : MonoBehaviour {
 				gameTimeModifier += DIFF_INCREASE_PER_SECOND * Time.deltaTime * FALL_DOWN_SPEEDUP;
 			else
 				gameTimeModifier += DIFF_INCREASE_PER_SECOND * Time.deltaTime;
-			moved += dx * Time.deltaTime * PlayerController.gameTimeModifier;
 			transform.Translate(Vector3.right * dx * Time.deltaTime * PlayerController.gameTimeModifier);
 		}
 	}
@@ -33,9 +31,9 @@ public class PlayerController : MonoBehaviour {
 	public static void DoTurn(bool isLeft){
 		isFallingDown = false;
 		if(isLeft){
-			dx = -3.0f;
+			dx = -3.5f;
 		} else{
-			dx = 3.0f;
+			dx = 3.5f;
 		}
 	}
 
@@ -55,9 +53,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void SetGameOver(){
-		// Reset everything
-		transform.Translate(Vector3.left * moved);
-		moved = 0.0f;
+		// Reset as necessary
 		gameTimeModifier = 1.0f;
 		starsCollected = 0;
 

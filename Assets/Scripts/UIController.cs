@@ -9,7 +9,7 @@ public class UIController : MonoBehaviour {
 	enum E_Direction {DIR_LEFT = 0, DIR_DOWN = 1, DIR_RIGHT = 2};
 	private Sprite[] airplaneSprites;
 	public static bool IsGameRunning = false, IsGameOver = false, IsPreparedGameOver = false;
-	public static int score;
+	public static int score, stars;
 
 	// Use this for initialization
 	void Start () {
@@ -57,8 +57,9 @@ public class UIController : MonoBehaviour {
 		}
 		if(panelScore.gameObject.activeSelf){
 			// Round to 2 decimal places
-			score = (int) Mathf.Round((PlayerController.gameTimeModifier - 1.0f) * (100.0f / PlayerController.DIFF_INCREASE_PER_SECOND)) + 1000 * PlayerController.starsCollected;
-			txtScore.text = string.Format("Score: {0}.{1}{2}", score / 100, (score / 10) % 10, score % 10);
+			score = (int) Mathf.Round((PlayerController.gameTimeModifier - 1.0f) * (100.0f / PlayerController.DIFF_INCREASE_PER_SECOND));
+			stars = PlayerController.starsCollected;
+			txtScore.text = string.Format("Distance: {0}.{1}{2}", score / 100, (score / 10) % 10, score % 10);
 		}
 	}
 
@@ -80,6 +81,12 @@ public class UIController : MonoBehaviour {
 		airplaneRenderer.gameObject.SetActive(true);
 		airplaneRenderer.sprite = airplaneSprites[(int) E_Direction.DIR_RIGHT];
 		PlayerController.DoTurn(false);
+		// Set the airplane at a proper position
+		Vector3 stageDimensions = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, 0));
+		airplaneRenderer.gameObject.transform.position = new Vector3(-stageDimensions.x * 0.75f, stageDimensions.y * 0.5f, 0);
+		// Reset the background
+		GameObject.Find("Background/backgroundA").transform.position = new Vector3(0.0f, 0.0f, 0.0f);
+		GameObject.Find("Background/backgroundB").transform.position = new Vector3(0.0f, -BackgroundController.screenHeightScale, 0.0f);
 
 		// Other initializations
 		if(FloorController.items != null){
@@ -92,9 +99,10 @@ public class UIController : MonoBehaviour {
 		IsGameRunning = true;
 		IsGameOver = false;
 		IsPreparedGameOver = false;
-		score = 0;
+		score = stars = 0;
 		CollectibleGenerator.lastFloorGenerateTime = -999.9f;
 		CollectibleGenerator.currentGameTime = -999.9f;
+		CollectibleGenerator.lastStarGenerateTime = CollectibleGenerator.FLOOR_GENERATE_DT / 1.99f;
 	}
 
 	void TurnLeft(){
@@ -134,7 +142,16 @@ public class UIController : MonoBehaviour {
 	void PrepareRestart(){
 		// Display Game Over panel
 		panelGameover.gameObject.SetActive(true);
-		txtGameover.text = string.Format("Game Over!\nFinal Score: {0}", UIController.score / 100);
+		txtGameover.text = string.Format("Game Over!\n" +
+			"Distance: {0} x 0.5 = {1}\n" +
+			"Stars collected: {2} x 20 = {3}\n" +
+			"Final Score: {4}", 
+			UIController.score / 100, // {0} distance
+			UIController.score / 200, // {1} distance as score
+			UIController.stars, // {2} stars collected
+			UIController.stars * 15, // {3} stars as score
+			UIController.score / 200 + UIController.stars * 15 // {4} Final score
+		);
 		GameObject.Find("Canvas/grpGameOver/btnRestart").GetComponent<Button>().onClick.AddListener(OnGameStart);
 		// Hide things
 		airplaneRenderer.gameObject.SetActive(false); // Airplane

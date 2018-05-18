@@ -4,9 +4,9 @@ using System.Collections;
 public class CollectibleGenerator : MonoBehaviour {
 	public static float lastFloorGenerateTime = -999.9f;
 	public static float currentGameTime = -999.9f;
-	const float FLOOR_GENERATE_DT = 6.0f;
-	static float lastStarGenerateTime = FLOOR_GENERATE_DT / 1.99f; // Half floor generate time
-	const float STAR_GENERATE_DT = 3.0f * FLOOR_GENERATE_DT; // Thrice floor generate time
+	public static float FLOOR_GENERATE_DT = 6.0f;
+	public static float lastStarGenerateTime = FLOOR_GENERATE_DT / 1.99f; // Half floor generate time
+	static float STAR_GENERATE_DT = 3.0f * FLOOR_GENERATE_DT; // Thrice floor generate time
 
 	// Use this for initialization
 	void Start () {
