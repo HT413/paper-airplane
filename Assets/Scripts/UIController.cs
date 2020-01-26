@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour {
 	private Sprite[] airplaneSprites;
 	public static bool IsGameRunning = false, IsGameOver = false, IsPreparedGameOver = false;
 	public static int score, stars;
+	AudioSource mainTrack, gameTrack	;
 
 	// Use this for initialization
 	void Start () {
@@ -19,6 +20,10 @@ public class UIController : MonoBehaviour {
 		panelGameover = GameObject.Find("Canvas/grpGameOver");
 		txtScore = GameObject.Find("Canvas/grpScore/txtScore").GetComponent<Text>();
 		txtGameover = GameObject.Find("Canvas/grpGameOver/txtGameOver").GetComponent<Text>();
+
+		// Audio sources
+		mainTrack = GameObject.Find("Canvas/Main_BGM").GetComponent<AudioSource>();
+		gameTrack = GameObject.Find("Canvas/Game_BGM").GetComponent<AudioSource>();
 
 		// Add listeners to buttons
 		Button btnGameStart = GameObject.Find("Canvas/grpOptions/btnStart").GetComponent<Button>();
@@ -47,6 +52,7 @@ public class UIController : MonoBehaviour {
 		IsGameOver = false;
 		IsPreparedGameOver = false;
 		score = 0;
+		mainTrack.Play();
 	}
 	
 	// Update is called once per frame
@@ -103,6 +109,9 @@ public class UIController : MonoBehaviour {
 		CollectibleGenerator.lastFloorGenerateTime = -999.9f;
 		CollectibleGenerator.currentGameTime = -999.9f;
 		CollectibleGenerator.lastStarGenerateTime = CollectibleGenerator.FLOOR_GENERATE_DT / 1.99f;
+		// Audio
+		mainTrack.Stop();
+		gameTrack.Play();
 	}
 
 	void TurnLeft(){
@@ -144,7 +153,7 @@ public class UIController : MonoBehaviour {
 		panelGameover.gameObject.SetActive(true);
 		txtGameover.text = string.Format("Game Over!\n" +
 			"Distance: {0} x 0.5 = {1}\n" +
-			"Stars collected: {2} x 20 = {3}\n" +
+			"Stars collected: {2} x 15 = {3}\n" +
 			"Final Score: {4}", 
 			UIController.score / 100, // {0} distance
 			UIController.score / 200, // {1} distance as score
@@ -156,5 +165,8 @@ public class UIController : MonoBehaviour {
 		// Hide things
 		airplaneRenderer.gameObject.SetActive(false); // Airplane
 		panelScore.gameObject.SetActive(false); // Score panel
+		// Audio reset
+		gameTrack.Stop();
+		mainTrack.Play();
 	}
 }

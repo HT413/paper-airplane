@@ -10,11 +10,14 @@ public class PlayerController : MonoBehaviour {
 	public static float DIFF_INCREASE_PER_SECOND = 0.01f;
 	public static int starsCollected = 0;
 	public static float FALL_DOWN_SPEEDUP = 2.5f;
+	AudioSource collect, collide;
 
 	// Use this for initialization
 	void Start () {
 		gameTimeModifier = 1.0f;
 		starsCollected = 0;
+		collect = GameObject.Find("Canvas/Star").GetComponent<AudioSource>();
+		collide = GameObject.Find("Canvas/Collide").GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -44,11 +47,13 @@ public class PlayerController : MonoBehaviour {
 
 	void OnTriggerEnter2D(Collider2D other){
 		if(other.tag.Equals("Floor")){
+			collide.Play();
 			SetGameOver();
 		}
 		else if(other.tag.Equals("Star")){
 			starsCollected++;
 			Destroy(other.gameObject);
+			collect.Play();
 		}
 	}
 
